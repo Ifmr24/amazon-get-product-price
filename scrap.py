@@ -37,26 +37,28 @@ class GetAmazonProductPrice:
         self.search_by_id()
         self.search_by_class()
 
-        if self.the_price:
-            return str(self.the_price)
-        return None
+        if not self.the_price:
+            raise ValueError('No se encontro el elemento.')
+        return str(self.the_price)
 
     def __str__(self):
+        try:
+            price_split = self.get_price().strip().split()
 
-        price_split = self.get_price().strip().split()
+            currency = ""
+            price = 0.0
 
-        currency = ""
-        price = 0.0
+            if price_split[0]:
+                currency = price_split[0]
+            if price_split[1]:
+                price = float(price_split[1])
 
-        if price_split[0]:
-            currency = price_split[0]
-        if price_split[1]:
-            price = float(price_split[1])
-
-        return str({
-            "currency": currency,
-            "price": price
-        })
+            return str({
+                "currency": currency,
+                "price": price
+            })
+        except Exception as error:
+            return str(error)
 
 
 print(GetAmazonProductPrice(
